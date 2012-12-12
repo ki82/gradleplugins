@@ -30,7 +30,7 @@ class EmmaPluginConvention{
         coverageFileName	= "coverage"
         tmpDir				= "${project.buildDir}/tmp/emma"
         instrDir			= "${tmpDir}/instr"
-        metaDataFilePath 	= "${tmpDir}/metadata.emma"
+        metaDataFilePath 	= "${tmpDir}/metadata.em"
     }
 }
 
