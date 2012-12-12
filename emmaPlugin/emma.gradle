@@ -30,13 +30,13 @@ class EmmaPluginConvention{
         coverageFileName	= "coverage"
         tmpDir				= "${project.buildDir}/tmp/emma"
         instrDir			= "${tmpDir}/instr"
-        metaDataFilePath 	= "${tmpDir}/metadata.emma"
+        metaDataFilePath 	= "${tmpDir}/metadata.em"
     }
 }
 
 test {
     // add EMMA related JVM args to our tests
-    jvmArgs "-XX:-UseSplitVerifier", "-Demma.coverage.out.file=$buildDir/tmp/emma/metadata.emma", "-Demma.coverage.out.merge=true"
+    jvmArgs "-XX:-UseSplitVerifier", "-Demma.coverage.out.file=$buildDir/tmp/emma/coverage.ec", "-Demma.coverage.out.merge=true"
 
     doFirst {
         if (!sourceSets.main.allJava.empty) {
@@ -53,7 +53,7 @@ test {
             // instruct our compiled classes and store them at $buildDir/tmp/emma/instr
             ant.emma(enabled: 'true', verbosity:'info'){
                 instr(merge:"true", destdir: emmaInstDir.absolutePath, instrpathref:"run.classpath",
-                        metadatafile: new File(emmaInstDir, '/metadata.emma').absolutePath) {
+                        metadatafile: new File("$buildDir/tmp/emma", '/metadata.em').absolutePath) {
                             instrpath {
                                 fileset(dir:sourceSets.main.output.classesDir.absolutePath, includes:"**/*.class")
                             }
@@ -75,7 +75,9 @@ test {
                 new File("$buildDir/reports/emma").mkdirs()
                 report(sourcepath: srcDir){
                     fileset(dir: emmaInstDir.absolutePath){
-                        include(name:"**/*.emma")
+                        include(name:"**/*.em")
+			 include(name:"**/*.ec")
+
                     }
                     txt(outfile:"$buildDir/reports/emma/coverage.txt")
                     html(outfile:"$buildDir/reports/emma/coverage.html")
